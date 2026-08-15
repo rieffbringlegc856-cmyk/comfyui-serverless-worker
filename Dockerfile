@@ -16,5 +16,5 @@ RUN cd /comfyui \
     && /usr/bin/python -m pip install --no-cache-dir -r requirements.txt \
     && /usr/bin/python -m pip install --no-cache-dir sqlalchemy alembic pydantic scikit-image onnxruntime segment-anything piexif
 
-# Подключаем кастомные ноды из /workspace/ComfyUI/custom_nodes и /runpod-volume/ComfyUI/custom_nodes
-RUN printf "workspace_nodes:\n  base_path: /workspace/ComfyUI\n  custom_nodes: custom_nodes\n\nvolume_nodes:\n  base_path: /runpod-volume/ComfyUI\n  custom_nodes: custom_nodes\n" > /comfyui/extra_model_paths.yaml
+# Подключаем ноды напрямую из сетевого хранилища RunPod Serverless
+RUN printf "volume_nodes:\n  base_path: /runpod-volume/ComfyUI\n  custom_nodes: custom_nodes\n" > /comfyui/extra_model_paths.yaml
