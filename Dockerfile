@@ -29,6 +29,7 @@ RUN git clone https://github.com/MadiatorLabs/ComfyUI-RunpodDirect.git || true
 RUN git clone https://github.com/ltdrdata/ComfyUI-Manager.git || true
 RUN git clone https://github.com/theUpsider/ComfyUI-Logic.git || true
 RUN git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git || true
+RUN git clone https://github.com/yolain/ComfyUI-Easy-Use.git || true
 
 # KJNodes стабильной версии
 RUN git clone https://github.com/kijai/ComfyUI-KJNodes.git \
