@@ -39,11 +39,11 @@ RUN git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git \
     && cd ComfyUI-Impact-Pack \
     && /usr/bin/python install.py || true
 
-# Ноды обработки, Krea2, LLM, mxToolkit и актуальные KJNodes
+# Ноды обработки, Krea2, LLM, mxToolkit, Inpaint Crop&Stitch и KJNodes
 RUN git clone https://github.com/Smirnov75/ComfyUI-mxToolkit.git comfyui-mxtoolkit || true
 RUN git clone https://github.com/lbouaraba/comfyui-krea2edit.git comfyui-krea2edit || true
 RUN git clone https://github.com/psun/ComfyUI-LLMTextProcessor.git ComfyUI-LLM-text-processor || true
-RUN git clone https://github.com/Acly/comfyui-inpaint-nodes.git comfyui-inpaint-cropandstitch || true
+RUN git clone https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch.git comfyui-inpaint-cropandstitch || true
 RUN git clone https://github.com/kijai/ComfyUI-KJNodes.git || true
 
 # Синхронизация директорий
