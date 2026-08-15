@@ -39,16 +39,12 @@ RUN git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git \
     && cd ComfyUI-Impact-Pack \
     && /usr/bin/python install.py || true
 
-# Ноды обработки, Krea2, LLM и mxToolkit
+# Ноды обработки, Krea2, LLM, mxToolkit и актуальные KJNodes
 RUN git clone https://github.com/Smirnov75/ComfyUI-mxToolkit.git comfyui-mxtoolkit || true
 RUN git clone https://github.com/lbouaraba/comfyui-krea2edit.git comfyui-krea2edit || true
 RUN git clone https://github.com/psun/ComfyUI-LLMTextProcessor.git ComfyUI-LLM-text-processor || true
 RUN git clone https://github.com/Acly/comfyui-inpaint-nodes.git comfyui-inpaint-cropandstitch || true
-
-# KJNodes
-RUN git clone https://github.com/kijai/ComfyUI-KJNodes.git \
-    && cd ComfyUI-KJNodes \
-    && git checkout $(git rev-list -n 1 --before="2025-01-01" main) || true
+RUN git clone https://github.com/kijai/ComfyUI-KJNodes.git || true
 
 # Синхронизация директорий
 RUN cp -rn /comfyui/custom_nodes/* /ComfyUI/custom_nodes/ 2>/dev/null || true
