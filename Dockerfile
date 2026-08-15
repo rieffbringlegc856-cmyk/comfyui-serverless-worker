@@ -1,20 +1,4 @@
-FROM runpod/pytorch:2.2.1-py3.10-cuda12.1.1-devel-ubuntu22.04
-
-WORKDIR /
-
-# Установка системных утилит и клонирование обработчиков
-RUN apt-get update && apt-get install -y git wget curl ffmpeg libsm6 libxext6 && rm -rf /var/lib/apt/lists/* \
-    && git clone https://github.com/runpod-workers/worker-comfyui /comfyui-worker \
-    && git clone https://github.com/comfyanonymous/ComfyUI /comfyui
-
-# Установка зависимостей ComfyUI и RunPod
-RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 \
-    && pip install --no-cache-dir -r /comfyui/requirements.txt \
-    && pip install --no-cache-dir -r /comfyui-worker/builder/requirements.txt || true \
-    && pip install --no-cache-dir runpod requests websocket-client
-
-# Копируем обработчик RunPod
-RUN cp -r /comfyui-worker/src/* / || true
+FROM runpod/worker-comfyui:5.0.0-base
 
 # Клонируем ваши проверенные кастомные ноды
 RUN git clone https://github.com/StableLlama/ComfyUI-basic_data_handling.git /comfyui/custom_nodes/ComfyUI-basic_data_handling \
@@ -28,6 +12,3 @@ RUN git clone https://github.com/StableLlama/ComfyUI-basic_data_handling.git /co
 
 # Устанавливаем Python-зависимости нод
 RUN for req in /comfyui/custom_nodes/*/requirements.txt; do [ -f "$req" ] && pip install --no-cache-dir -r "$req"; done
-
-WORKDIR /
-CMD ["python3", "-u", "/rp_handler.py"]
