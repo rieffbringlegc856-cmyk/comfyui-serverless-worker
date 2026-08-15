@@ -1,6 +1,12 @@
 FROM runpod/worker-comfyui:5.0.0-base
 
-# Обновляем ядро ComfyUI и ставим все зависимости строго в системный Python
+# Устанавливаем системные C/Python-заголовки для компиляции Triton/CUDA
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Обновляем ComfyUI и системные зависимости
 RUN cd /comfyui \
     && git fetch --all \
     && (git checkout master || git checkout main) \
