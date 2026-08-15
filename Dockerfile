@@ -16,5 +16,5 @@ RUN cd /comfyui \
     && /usr/bin/python -m pip install --no-cache-dir -r requirements.txt \
     && /usr/bin/python -m pip install --no-cache-dir sqlalchemy alembic pydantic scikit-image onnxruntime segment-anything piexif
 
-# Подключаем ноды напрямую из сетевого хранилища RunPod Serverless
-RUN printf "volume_nodes:\n  base_path: /runpod-volume/ComfyUI\n  custom_nodes: custom_nodes\n" > /comfyui/extra_model_paths.yaml
+# Подменяем системную папку custom_nodes на сетевой диск при запуске контейнера
+RUN sed -i '/def start_comfyui/a \    import shutil\n    if os.path.exists("/runpod-volume/ComfyUI/custom_nodes"):\n        for item in os.listdir("/runpod-volume/ComfyUI/custom_nodes"):\n            s = os.path.join("/runpod-volume/ComfyUI/custom_nodes", item)\n            d = os.path.join("/comfyui/custom_nodes", item)\n            if not os.path.exists(d):\n                os.symlink(s, d)' /rp_handler.py
