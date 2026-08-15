@@ -1,6 +1,9 @@
 FROM runpod/worker-comfyui:5.0.0-base
 
-# Обновляем ядро ComfyUI до актуальной версии с поддержкой встроенных нод Logic и Math
+# Устанавливаем системные зависимости нового ядра ComfyUI
+RUN pip install --no-cache-dir sqlalchemy alembic pydantic
+
+# Обновляем ядро ComfyUI
 RUN cd /comfyui \
     && git fetch --all \
     && (git checkout master || git checkout main) \
@@ -31,7 +34,7 @@ RUN git clone https://github.com/kijai/ComfyUI-KJNodes.git \
 # Синхронизируем директории
 RUN cp -rn /comfyui/custom_nodes/* /ComfyUI/custom_nodes/ 2>/dev/null || true
 
-# Устанавливаем зависимости всех кастомных нод
+# Устанавливаем Python-зависимости всех нод
 RUN for req in /comfyui/custom_nodes/*/requirements.txt /ComfyUI/custom_nodes/*/requirements.txt; do \
       [ -f "$req" ] && pip install --no-cache-dir -r "$req" || true; \
     done
