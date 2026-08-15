@@ -17,8 +17,8 @@ RUN cd /comfyui \
     && /usr/bin/python -m pip install --no-cache-dir -r requirements.txt \
     && /usr/bin/python -m pip install --no-cache-dir sqlalchemy alembic pydantic scikit-image onnxruntime segment-anything piexif
 
-# Создаем папки
-RUN mkdir -p /comfyui/custom_nodes /ComfyUI/custom_nodes
+# Создаем папки для нод и моделей
+RUN mkdir -p /comfyui/custom_nodes /ComfyUI/custom_nodes /comfyui/models/LLM
 
 WORKDIR /comfyui/custom_nodes
 
@@ -39,11 +39,11 @@ RUN git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git \
     && cd ComfyUI-Impact-Pack \
     && /usr/bin/python install.py || true
 
-# Mikey Nodes, Krea2, CropAndStitch, mxToolkit, LLM, KJNodes и вспомогательные
+# Все кастомные ноды рабочего процесса
 RUN git clone https://github.com/bash-j/mikey_nodes.git || true
 RUN git clone https://github.com/Smirnov75/ComfyUI-mxToolkit.git comfyui-mxtoolkit || true
 RUN git clone https://github.com/lbouaraba/comfyui-krea2edit.git comfyui-krea2edit || true
-RUN git clone https://github.com/psun/ComfyUI-LLMTextProcessor.git ComfyUI-LLM-text-processor || true
+RUN git clone https://github.com/KingManiya/ComfyUI-LLM-text-processor.git || true
 RUN git clone https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch.git comfyui-inpaint-cropandstitch || true
 RUN git clone https://github.com/kijai/ComfyUI-KJNodes.git || true
 RUN git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git comfyui-videohelpersuite || true
@@ -52,7 +52,10 @@ RUN git clone https://github.com/flyingshapes/comfyui-textoverlay.git comfyui-te
 # Синхронизация директорий
 RUN cp -rn /comfyui/custom_nodes/* /ComfyUI/custom_nodes/ 2>/dev/null || true
 
-# Установка зависимостей всех нод
+# Установка зависимостей всех кастомных нод
 RUN for req in /comfyui/custom_nodes/*/requirements.txt /ComfyUI/custom_nodes/*/requirements.txt; do \
       [ -f "$req" ] && /usr/bin/python -m pip install --no-cache-dir -r "$req" || true; \
     done
+
+# Добавляем пути поиска для LLM моделей с Network Volume
+RUN printf "extra_llm_paths:\n  base_path: /runpod-volume\n  llm: models/LLM\n  llm_alt: ComfyUI/models/LLM\n" > /comfyui/extra_model_paths.yaml
