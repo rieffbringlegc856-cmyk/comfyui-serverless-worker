@@ -1,8 +1,8 @@
 FROM runpod/worker-comfyui:5.0.0-base
 
-# Устанавливаем системные C/Python-заголовки для компиляции Triton/CUDA
+# Устанавливаем заголовки строго для Python 3.11
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3-dev \
+    python3.11-dev \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
