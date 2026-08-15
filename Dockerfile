@@ -14,7 +14,11 @@ RUN git clone https://github.com/MoonGoblinDev/Civicomfy.git || true
 RUN git clone https://github.com/MadiatorLabs/ComfyUI-RunpodDirect.git || true
 RUN git clone https://github.com/ltdrdata/ComfyUI-Manager.git || true
 
-# Клонируем KJNodes и переключаемся на стабильную версию
+# Ноды логики, условий и переключателей
+RUN git clone https://github.com/theUpsider/ComfyUI-Logic.git || true
+RUN git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git || true
+
+# KJNodes стабильной версии
 RUN git clone https://github.com/kijai/ComfyUI-KJNodes.git \
     && cd ComfyUI-KJNodes \
     && git checkout $(git rev-list -n 1 --before="2025-01-01" main) || true
@@ -22,7 +26,7 @@ RUN git clone https://github.com/kijai/ComfyUI-KJNodes.git \
 # Синхронизируем директории
 RUN cp -rn /comfyui/custom_nodes/* /ComfyUI/custom_nodes/ 2>/dev/null || true
 
-# Устанавливаем Python-зависимости всех нод
+# Устанавливаем зависимости всех нод
 RUN for req in /comfyui/custom_nodes/*/requirements.txt /ComfyUI/custom_nodes/*/requirements.txt; do \
       [ -f "$req" ] && pip install --no-cache-dir -r "$req" || true; \
     done
