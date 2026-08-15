@@ -1,9 +1,11 @@
 FROM runpod/worker-comfyui:5.0.0-base
 
-# Устанавливаем заголовки строго для Python 3.11
+# Добавлены libglib2.0-0 и libgl1 для работы OpenCV (cv2)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3.11-dev \
     build-essential \
+    libglib2.0-0 \
+    libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Обновляем ComfyUI и системные зависимости
