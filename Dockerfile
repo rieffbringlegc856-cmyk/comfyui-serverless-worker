@@ -1,21 +1,19 @@
 FROM runpod/worker-comfyui:5.0.0-base
 
-# Устанавливаем системные зависимости нового ядра ComfyUI
-RUN pip install --no-cache-dir sqlalchemy alembic pydantic
-
-# Обновляем ядро ComfyUI
+# Обновляем ядро ComfyUI и ставим все зависимости строго в системный Python
 RUN cd /comfyui \
     && git fetch --all \
     && (git checkout master || git checkout main) \
     && git pull \
-    && pip install --no-cache-dir -r requirements.txt || true
+    && /usr/bin/python -m pip install --no-cache-dir -r requirements.txt \
+    && /usr/bin/python -m pip install --no-cache-dir sqlalchemy alembic pydantic
 
-# Создаем директории
+# Создаем папки
 RUN mkdir -p /comfyui/custom_nodes /ComfyUI/custom_nodes
 
 WORKDIR /comfyui/custom_nodes
 
-# Клонируем кастомные ноды
+# Кастомные ноды
 RUN git clone https://github.com/StableLlama/ComfyUI-basic_data_handling.git || true
 RUN git clone https://github.com/rgthree/rgthree-comfy.git || true
 RUN git clone https://github.com/evanspearman/ComfyMath.git || true
@@ -34,7 +32,7 @@ RUN git clone https://github.com/kijai/ComfyUI-KJNodes.git \
 # Синхронизируем директории
 RUN cp -rn /comfyui/custom_nodes/* /ComfyUI/custom_nodes/ 2>/dev/null || true
 
-# Устанавливаем Python-зависимости всех нод
+# Устанавливаем зависимости всех кастомных нод
 RUN for req in /comfyui/custom_nodes/*/requirements.txt /ComfyUI/custom_nodes/*/requirements.txt; do \
-      [ -f "$req" ] && pip install --no-cache-dir -r "$req" || true; \
+      [ -f "$req" ] && /usr/bin/python -m pip install --no-cache-dir -r "$req" || true; \
     done
