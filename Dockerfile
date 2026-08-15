@@ -1,4 +1,4 @@
-FROM runpod/worker-comfyui:latest
+FROM registry.runpod.net/runpod-workers-worker-comfyui-main-dockerfile:a1981e99b
 
 # Скачиваем ваши кастомные ноды внутрь образа
 RUN git clone https://github.com/ComfyUI/ComfyUI-basic_data_handling /comfyui/custom_nodes/ComfyUI-basic_data_handling \
