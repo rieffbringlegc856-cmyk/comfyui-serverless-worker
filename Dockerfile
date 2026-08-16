@@ -17,7 +17,7 @@ RUN cd /comfyui \
     && /usr/bin/python -m pip install --no-cache-dir -r requirements.txt \
     && /usr/bin/python -m pip install --no-cache-dir sqlalchemy alembic pydantic scikit-image onnxruntime segment-anything piexif
 
-# Создаем папки для нод и моделей
+# Создаем папки
 RUN mkdir -p /comfyui/custom_nodes /ComfyUI/custom_nodes /comfyui/models/LLM
 
 WORKDIR /comfyui/custom_nodes
@@ -57,5 +57,5 @@ RUN for req in /comfyui/custom_nodes/*/requirements.txt /ComfyUI/custom_nodes/*/
       [ -f "$req" ] && /usr/bin/python -m pip install --no-cache-dir -r "$req" || true; \
     done
 
-# Добавляем пути поиска для LLM моделей с Network Volume
-RUN printf "extra_llm_paths:\n  base_path: /runpod-volume\n  llm: models/LLM\n  llm_alt: ComfyUI/models/LLM\n" > /comfyui/extra_model_paths.yaml
+# Полная конфигурация поиска моделей и input-файлов на Network Volume
+RUN printf "runpod_volume:\n  base_path: /runpod-volume\n  checkpoints: models/checkpoints\n  clip: models/clip\n  clip_vision: models/clip_vision\n  configs: models/configs\n  controlnet: models/controlnet\n  embeddings: models/embeddings\n  loras: models/loras\n  upscale_models: models/upscale_models\n  vae: models/vae\n  unet: models/unet\n  llm: models/LLM\n  input: input\n" > /comfyui/extra_model_paths.yaml
